@@ -10,20 +10,47 @@
     <script type="text/javascript">
 
     window.onload = function() {
+        
+        var screenWidth = 800; // Width of my game screen;
+        var screenHeight = Math.floor(screenWidth*.75); // 4/3 proportion always
 
-        var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create });
+        var game = new Phaser.Game(screenWidth, screenHeight, Phaser.AUTO, '', { preload: preload, create: create });
+        
+        var gameModule = Math.floor(screenWidth/8); // Subdivide playable field into "modules", in this case, 100x100
+        
+        var fieldWidth = gameModule*6; // Width of the playable field
+        var fieldHeight = gameModule*4; // Height of the playable field
+        var fieldX = gameModule; // Origin of the playable field, X coordinate
+        var fieldY = gameModule; // Same as above, for the Y coordinate
+        
+        var playerSize = {
+            w: 32,
+            h: 64
+        }
+        
+        /* We will use the playable field defined area to mark where can and cannot step the players, also
+        to detect if the ball has gone outside the field */
 
         function preload () {
 
-            game.load.image('logo', 'phaser.png');
+           // game.load.image('logo', 'phaser.png');
+            game.load.image('bg', 'bg.png');
+            game.load.image('player1', 'p1.png');
+            game.load.image('player2', 'p2.png');
+            game.load.image('ball', 'ball.png');
 
         }
 
         function create () {
-
-            var logo = game.add.sprite(game.world.centerX, game.world.centerY, 'logo');
-            logo.anchor.setTo(0.5, 0.5);
-
+            var bg = game.add.sprite(game.world.centerX, game.world.centerY, 'bg');
+            var p1 = game.add.sprite(game.world.centerX - gameModule*2, game.world.centerY, 'player1');
+            var p2 = game.add.sprite(game.world.centerX + gameModule*2, game.world.centerY, 'player2');
+            var ball = game.add.sprite(game.world.centerX, game.world.centerY, 'ball');
+            
+           bg.anchor.setTo(0.5, 0.5);
+            p1.anchor.setTo(.5,.5);
+            p2.anchor.setTo(.5,.5);
+            ball.anchor.setTo(.5,.5);
         }
 
     };
