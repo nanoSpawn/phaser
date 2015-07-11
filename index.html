@@ -61,21 +61,21 @@
         
         function update () {
             if (arrows.up.isDown) {
-                if (isWithinBounds('p1')) {
+                if (isWithinBounds('p1', 'up')) {
                     p1.y--;
                 }
             }
             else if (arrows.down.isDown) {
-                if (isWithinBounds('p1')) {
+                if (isWithinBounds('p1', 'down')) {
                     p1.y++;
                 }
             }
             if (arrows.left.isDown) {
-                if (isWithinBounds('p1')) {
+                if (isWithinBounds('p1', 'left')) {
                     p1.x--;
                 }
             } else if (arrows.right.isDown) {
-                if (isWithinBounds('p1')) {
+                if (isWithinBounds('p1', 'right')) {
                     p1.x++;
                 }
             }
@@ -83,10 +83,19 @@
             
         }
         
-        function isWithinBounds(player) {
+        
+        //Parameters: player: the sprite we're checking, direction, the direction pressed
+        function isWithinBounds(player, direction) {
             if (player == 'p1') {
                 if (p1.x > gameModule && p1.x < gameModule*4 && p1.y > gameModule && p1.y < gameModule*5 ) {
                     return true;
+                } else {
+                    switch (direction) {
+                        case 'left':    if (p1.x >= gameModule*4) {return true;} break;
+                        case 'right':   if (p1.x <= gameModule) {return true;} break;
+                        case 'up':      if (p1.y >= gameModule*5) {return true;} break;
+                        case 'down':    if (p1.y <= gameModule) {return true;} break;
+                    }
                 }
             } else if (player == 'p2') {
                 if (p2.x > gameModule*4 && p2.x < gameModule*8 && p2.y > gameModule && p2.y < gameModule*5 ) {
