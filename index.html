@@ -11,22 +11,21 @@
 
     window.onload = function() {
         
+        var arrows, p1, p2, bg, ball, pspeed, bspeed;
+        
         var screenWidth = 800; // Width of my game screen;
         var screenHeight = Math.floor(screenWidth*.75); // 4/3 proportion always
 
-        var game = new Phaser.Game(screenWidth, screenHeight, Phaser.AUTO, '', { preload: preload, create: create });
+        var game = new Phaser.Game(screenWidth, screenHeight, Phaser.AUTO, '', { preload: preload, create: create, update: update });
         
         var gameModule = Math.floor(screenWidth/8); // Subdivide playable field into "modules", in this case, 100x100
         
         var fieldWidth = gameModule*6; // Width of the playable field
         var fieldHeight = gameModule*4; // Height of the playable field
-        var fieldX = gameModule; // Origin of the playable field, X coordinate
+        var fieldX = gameModule;  // Origin of the playable field, X coordinate
         var fieldY = gameModule; // Same as above, for the Y coordinate
         
-        var playerSize = {
-            w: 32,
-            h: 64
-        }
+
         
         /* We will use the playable field defined area to mark where can and cannot step the players, also
         to detect if the ball has gone outside the field */
@@ -42,15 +41,58 @@
         }
 
         function create () {
-            var bg = game.add.sprite(game.world.centerX, game.world.centerY, 'bg');
-            var p1 = game.add.sprite(game.world.centerX - gameModule*2, game.world.centerY, 'player1');
-            var p2 = game.add.sprite(game.world.centerX + gameModule*2, game.world.centerY, 'player2');
-            var ball = game.add.sprite(game.world.centerX, game.world.centerY, 'ball');
+            bg = game.add.sprite(game.world.centerX, game.world.centerY, 'bg');
+            p1 = game.add.sprite(game.world.centerX - gameModule*2, game.world.centerY, 'player1');
+            p2 = game.add.sprite(game.world.centerX + gameModule*2, game.world.centerY, 'player2');
+            ball = game.add.sprite(game.world.centerX, game.world.centerY, 'ball');
             
-           bg.anchor.setTo(0.5, 0.5);
+            bg.anchor.setTo(0.5, 0.5);
             p1.anchor.setTo(.5,.5);
             p2.anchor.setTo(.5,.5);
             ball.anchor.setTo(.5,.5);
+            
+            // We first assign the cursor keys to a variable
+            //After that, we capture the cursor keypresses for exclusivity
+            arrows =  game.input.keyboard.createCursorKeys();
+            game.input.keyboard.addKeyCapture(arrows);
+            
+           
+        }
+        
+        function update () {
+            if (arrows.up.isDown) {
+                if (isWithinBounds('p1')) {
+                    p1.y--;
+                }
+            }
+            else if (arrows.down.isDown) {
+                if (isWithinBounds('p1')) {
+                    p1.y++;
+                }
+            }
+            if (arrows.left.isDown) {
+                if (isWithinBounds('p1')) {
+                    p1.x--;
+                }
+            } else if (arrows.right.isDown) {
+                if (isWithinBounds('p1')) {
+                    p1.x++;
+                }
+            }
+            
+            
+        }
+        
+        function isWithinBounds(player) {
+            if (player == 'p1') {
+                if (p1.x > gameModule && p1.x < gameModule*4 && p1.y > gameModule && p1.y < gameModule*5 ) {
+                    return true;
+                }
+            } else if (player == 'p2') {
+                if (p2.x > gameModule*4 && p2.x < gameModule*8 && p2.y > gameModule && p2.y < gameModule*5 ) {
+                    return true;
+                }
+            }
         }
 
     };
